@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+  body {
+    @apply bg-paper text-ink font-sans;
+  }
+  ::selection {
+    @apply bg-brass/30;
+  }
+  /* Visible keyboard focus everywhere — never suppressed */
+  :focus-visible {
+    outline: 2px solid theme('colors.vault.DEFAULT');
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Signature element: a small die-cut notch top-left, echoing a
+     safe-deposit box tag. Used on file/folder cards in grid view. */
+  .deposit-card {
+    @apply relative bg-surface border border-line rounded-ticket transition-colors duration-150;
+  }
+  .deposit-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 14px;
+    width: 18px;
+    height: 6px;
+    background: theme('colors.paper');
+    border-left: 1px solid theme('colors.line');
+    border-right: 1px solid theme('colors.line');
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+  .deposit-card:hover {
+    @apply border-vault/40 shadow-sm;
+  }
+
+  /* Ledger row: the default list-view row, with a hairline rule instead
+     of a boxed card — echoes a bank ledger line. */
+  .ledger-row {
+    @apply flex items-center gap-3 px-3 py-2.5 border-b border-line transition-colors duration-150;
+  }
+  .ledger-row:hover {
+    @apply bg-vault/[0.04];
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-vault text-paper text-sm font-medium rounded-ticket
+           hover:bg-vault-dark transition-colors duration-150;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-transparent text-ink text-sm font-medium rounded-ticket
+           border border-line hover:border-ink/40 transition-colors duration-150;
+  }
+  .btn-danger {
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-transparent text-danger text-sm font-medium rounded-ticket
+           border border-danger/30 hover:bg-danger/5 transition-colors duration-150;
+  }
+}

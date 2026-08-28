@@ -1,0 +1,77 @@
+spring:
+  application:
+    name: vaultivo-service
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:vaultivo}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate   # schema is owned by Flyway migrations, not Hibernate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 105MB
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            # Spring's OAuth2 registration validation requires non-blank
+            # client-id/secret at startup even if Google login is never
+            # used — "not-configured" lets the app boot fine for local
+            # testing with email/password auth only. Clicking "Sign in
+            # with Google" without real credentials just fails gracefully
+            # at Google's end. Set real values via env vars to enable it.
+            client-id: ${GOOGLE_CLIENT_ID:not-configured}
+            client-secret: ${GOOGLE_CLIENT_SECRET:not-configured}
+            scope:
+              - email
+              - profile
+
+server:
+  port: ${SERVER_PORT:8080}
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:change-me-in-production-min-256-bits-long}
+    access-token-expiry-minutes: 30
+    refresh-token-expiry-days: 14
+
+  storage:
+    provider: ${STORAGE_PROVIDER:S3}   # S3 or SUPABASE
+    default-quota-bytes: 5368709120     # 5 GB default per user
+    s3:
+      bucket: ${S3_BUCKET:vaultivo-dev}
+      region: ${AWS_REGION:ap-south-1}
+      endpoint: ${AWS_S3_ENDPOINT:}     # empty = real AWS; set to http://localhost:9000 for local MinIO
+      presigned-url-expiry-minutes: 15
+
+  oauth2:
+    # Where the browser is redirected after Google login succeeds, with
+    # ?token=<jwt> appended. The React app reads this on /oauth2/callback.
+    redirect-uri: ${OAUTH2_REDIRECT_URI:http://localhost:5173/oauth2/callback}
+
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+
+  rate-limit:
+    public-link-requests-per-minute: 30
+    api-requests-per-minute: 120
+
+logging:
+  level:
+    com.vaultivo: ${LOG_LEVEL:INFO}
+    org.springframework.security: WARN
