@@ -51,6 +51,7 @@ public class SecurityConfig {
                 // Public share-link access is validated by token inside the controller,
                 // not by Spring Security roles — it must stay open to anonymous requests.
                 .requestMatchers("/api/public-links/**").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2

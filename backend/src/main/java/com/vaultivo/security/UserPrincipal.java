@@ -11,9 +11,10 @@ import java.util.UUID;
 
 /**
  * Adapts our {@link User} entity to Spring Security's UserDetails contract.
- * MVP has a single implicit "USER" role — role-based access for files/folders
- * (Owner/Editor/Viewer) is enforced at the resource level in the service
- * layer, not via Spring authorities.
+ * Every user gets ROLE_USER; ROLE_ADMIN is added on top for platform admins
+ * (see User.isAdmin — set via direct DB access, no self-service elevation).
+ * File/folder-level access (Owner/Editor/Viewer) is a separate concept,
+ * still enforced at the resource level via PermissionService, not here.
  */
 public class UserPrincipal implements UserDetails {
 
@@ -33,7 +34,12 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        List<GrantedAuthority> authorities = new java.util.ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        if (user.isAdmin()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+        return authorities;
     }
 
     @Override

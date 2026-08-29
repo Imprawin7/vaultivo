@@ -54,6 +54,10 @@ public class User {
     @Column(name = "is_active", nullable = false)
     private boolean active;
 
+    @Column(name = "is_admin", nullable = false)
+    @Builder.Default
+    private boolean admin = false;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

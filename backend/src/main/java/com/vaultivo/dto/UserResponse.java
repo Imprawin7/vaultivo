@@ -10,7 +10,8 @@ public record UserResponse(
         String displayName,
         String avatarUrl,
         long storageQuotaBytes,
-        long storageUsedBytes
+        long storageUsedBytes,
+        boolean isAdmin
 ) {
     public static UserResponse from(User user) {
         return new UserResponse(
@@ -19,7 +20,8 @@ public record UserResponse(
                 user.getDisplayName(),
                 user.getAvatarUrl(),
                 user.getStorageQuotaBytes(),
-                user.getStorageUsedBytes()
+                user.getStorageUsedBytes(),
+                user.isAdmin()
         );
     }
 }
