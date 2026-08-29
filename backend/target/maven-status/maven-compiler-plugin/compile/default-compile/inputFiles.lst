@@ -2,6 +2,7 @@ D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\config\package-info.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\config\RateLimitFilterConfig.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\config\S3Config.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\config\SecurityConfig.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\AdminController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\AuthController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\FileController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\FolderController.java
@@ -11,6 +12,8 @@ D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\PublicLinkContr
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\SearchController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\ShareController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\TrashController.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\AdminUserResponse.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\AdminUserUpdateRequest.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\AuthResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\BreadcrumbItem.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\CompleteUploadRequest.java
@@ -28,6 +31,7 @@ D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\LinkShareCreateRequest
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\LinkShareResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\LoginRequest.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\package-info.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\PlatformStatsResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\PublicLinkAccessRequest.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\PublicLinkInfoResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\RegisterRequest.java
@@ -71,6 +75,7 @@ D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\security\OAuth2Authenticat
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\security\package-info.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\security\PermissionService.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\security\UserPrincipal.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\service\AdminService.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\service\AuthService.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\service\FileService.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\service\FolderService.java
