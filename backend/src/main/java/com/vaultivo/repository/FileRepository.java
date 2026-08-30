@@ -40,4 +40,8 @@ public interface FileRepository extends JpaRepository<File, UUID> {
     List<File> findByFolderIdAndTrashedFalse(UUID folderId);
 
     List<File> findByFolderIdIn(List<UUID> folderIds);
+
+    // Every file the user owns, any folder depth, trashed or not — used for
+    // account-deletion S3 cleanup, where nesting/trash state don't matter.
+    List<File> findByOwnerId(UUID ownerId);
 }

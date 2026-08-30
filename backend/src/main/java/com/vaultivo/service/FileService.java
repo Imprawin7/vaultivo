@@ -6,8 +6,10 @@ import com.vaultivo.exception.ResourceNotFoundException;
 import com.vaultivo.exception.StorageQuotaExceededException;
 import com.vaultivo.model.File;
 import com.vaultivo.model.Folder;
+import com.vaultivo.model.UploadAttempt;
 import com.vaultivo.model.User;
 import com.vaultivo.repository.FileRepository;
+import com.vaultivo.repository.UploadAttemptRepository;
 import com.vaultivo.repository.UserRepository;
 import com.vaultivo.security.AccessLevel;
 import com.vaultivo.security.PermissionService;
@@ -29,10 +31,11 @@ public class FileService {
 
     private final FileRepository fileRepository;
     private final UserRepository userRepository;
+    private final UploadAttemptRepository uploadAttemptRepository;
     private final PermissionService permissionService;
     private final StorageService storageService;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public InitUploadResponse initUpload(UUID userId, InitUploadRequest request) {
         UUID ownerId = userId;
 
@@ -50,6 +53,17 @@ public class FileService {
         String objectKey = storageService.generateObjectKey(ownerId, request.name());
         PresignedUpload presigned =
                 storageService.createPresignedUploadUrl(objectKey, request.mimeType(), request.sizeBytes());
+
+        // Recorded PENDING here so an abandoned upload (client never calls
+        // complete-upload, or the S3 PUT itself fails) is still visible to
+        // admins — see AdminService.failedUploads().
+        uploadAttemptRepository.save(UploadAttempt.builder()
+                .ownerId(ownerId)
+                .name(request.name())
+                .sizeBytes(request.sizeBytes())
+                .storageKey(objectKey)
+                .status(UploadAttempt.Status.PENDING)
+                .build());
 
         return new InitUploadResponse(presigned.storageKey(), presigned.uploadUrl(), presigned.expiresAt());
     }
@@ -87,6 +101,12 @@ public class FileService {
 
         owner.setStorageUsedBytes(owner.getStorageUsedBytes() + request.sizeBytes());
         userRepository.save(owner);
+
+        uploadAttemptRepository.findByStorageKey(request.storageKey()).ifPresent(attempt -> {
+            attempt.setStatus(UploadAttempt.Status.COMPLETED);
+            attempt.setCompletedAt(Instant.now());
+            uploadAttemptRepository.save(attempt);
+        });
 
         return FileResponse.from(file);
     }

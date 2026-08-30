@@ -1,5 +1,7 @@
 package com.vaultivo.service;
 
+import com.vaultivo.activity.ActivityAction;
+import com.vaultivo.activity.ActivityLogService;
 import com.vaultivo.dto.AuthResponse;
 import com.vaultivo.dto.LoginRequest;
 import com.vaultivo.dto.RegisterRequest;
@@ -22,6 +24,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final ActivityLogService activityLogService;
 
     @Value("${app.storage.default-quota-bytes:5368709120}")
     private long defaultQuotaBytes;
@@ -43,6 +46,7 @@ public class AuthService {
                 .build();
 
         user = userRepository.save(user);
+        activityLogService.log(user.getId(), ActivityAction.REGISTER);
 
         return issueTokenFor(user);
     }
@@ -60,6 +64,8 @@ public class AuthService {
         if (!user.isActive()) {
             throw new InvalidCredentialsException();
         }
+
+        activityLogService.log(user.getId(), ActivityAction.LOGIN, java.util.Map.of("method", "password"));
 
         return issueTokenFor(user);
     }

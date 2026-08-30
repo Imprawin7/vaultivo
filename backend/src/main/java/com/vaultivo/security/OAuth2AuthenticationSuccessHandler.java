@@ -1,5 +1,7 @@
 package com.vaultivo.security;
 
+import com.vaultivo.activity.ActivityAction;
+import com.vaultivo.activity.ActivityLogService;
 import com.vaultivo.model.User;
 import com.vaultivo.repository.UserRepository;
 import jakarta.servlet.ServletException;
@@ -21,6 +23,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final ActivityLogService activityLogService;
 
     @Value("${app.oauth2.redirect-uri:http://localhost:5173/oauth2/callback}")
     private String redirectUri;
@@ -63,6 +66,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                         .build()));
 
         String accessToken = jwtService.generateAccessToken(user.getId(), user.getEmail());
+        activityLogService.log(user.getId(), ActivityAction.LOGIN, java.util.Map.of("method", "google"));
 
         String targetUrl = UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParam("token", accessToken)
