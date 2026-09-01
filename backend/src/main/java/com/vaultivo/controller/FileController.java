@@ -54,6 +54,13 @@ public class FileController {
         return ResponseEntity.ok(fileService.getDownloadUrl(principal.getId(), id));
     }
 
+    @GetMapping("/{id}/preview-url")
+    public ResponseEntity<DownloadUrlResponse> previewUrl(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable UUID id) {
+        return ResponseEntity.ok(fileService.getPreviewUrl(principal.getId(), id));
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<FileResponse> update(
             @AuthenticationPrincipal UserPrincipal principal,

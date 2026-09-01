@@ -13,6 +13,7 @@ public record PublicLinkInfoResponse(
         ShareRole role,
         boolean isFolder,
         boolean requiresPassword,
+        String mimeType,                  // populated for file links only — null for folder links (see childFiles instead)
         List<FileResponse> childFiles,   // populated for folder links only
         List<FolderResponse> childFolders // populated for folder links only
 ) {}

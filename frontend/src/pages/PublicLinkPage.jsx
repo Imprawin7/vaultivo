@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import * as publicLinksApi from '../services/publicLinksApi';
 import ItemList from '../components/ItemList';
+import PreviewModal from '../components/PreviewModal';
+import { isPreviewable } from '../lib/preview';
 
 /**
  * Fully anonymous — no AuthProvider guard, matches the backend's permitAll
@@ -16,6 +18,8 @@ export default function PublicLinkPage() {
   const [password, setPassword] = useState('');
   const [submittedPassword, setSubmittedPassword] = useState(undefined);
   const [downloadError, setDownloadError] = useState(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewTarget, setPreviewTarget] = useState(null); // file, for the folder-listing case
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['public-link', token, submittedPassword],
@@ -89,9 +93,24 @@ export default function PublicLinkPage() {
         <h1 className="font-display text-xl mb-1 text-center">{data.name}</h1>
         <p className="text-xs text-ink/40 font-mono text-center mb-5 uppercase">{data.role} access</p>
         {downloadError && <p className="text-sm text-danger text-center mb-3">{downloadError}</p>}
-        <button onClick={handleDownload} className="btn-primary w-full justify-center">
-          Download
-        </button>
+        <div className="flex gap-2 justify-center">
+          {isPreviewable(data.mimeType) && (
+            <button onClick={() => setPreviewOpen(true)} className="btn-secondary">
+              Preview
+            </button>
+          )}
+          <button onClick={handleDownload} className="btn-primary">
+            Download
+          </button>
+        </div>
+        {previewOpen && (
+          <PreviewModal
+            file={{ name: data.name, mimeType: data.mimeType }}
+            fetchPreviewUrl={() => publicLinksApi.getPreviewUrl(token, submittedPassword)}
+            onClose={() => setPreviewOpen(false)}
+            onDownload={handleDownload}
+          />
+        )}
       </CenteredShell>
     );
   }
@@ -113,9 +132,25 @@ export default function PublicLinkPage() {
             files={data.childFiles}
             mode="readonly"
             onOpenFolder={() => {}} // no anonymous drill-down — see file header comment
+            onPreview={(file) => setPreviewTarget(file)}
             onDownload={async (file) => {
               try {
                 const { url } = await publicLinksApi.getFolderFileDownloadUrl(token, file.id, submittedPassword);
+                window.location.href = url;
+              } catch (err) {
+                alert(err.response?.data?.message || 'Could not download this file');
+              }
+            }}
+          />
+        )}
+        {previewTarget && (
+          <PreviewModal
+            file={previewTarget}
+            fetchPreviewUrl={() => publicLinksApi.getFolderFilePreviewUrl(token, previewTarget.id, submittedPassword)}
+            onClose={() => setPreviewTarget(null)}
+            onDownload={async () => {
+              try {
+                const { url } = await publicLinksApi.getFolderFileDownloadUrl(token, previewTarget.id, submittedPassword);
                 window.location.href = url;
               } catch (err) {
                 alert(err.response?.data?.message || 'Could not download this file');

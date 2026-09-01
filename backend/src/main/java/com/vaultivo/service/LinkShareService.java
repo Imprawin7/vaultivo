@@ -122,14 +122,15 @@ public class LinkShareService {
         if (link.getFileId() != null) {
             File file = fileRepository.findById(link.getFileId())
                     .orElseThrow(() -> new ResourceNotFoundException("File no longer exists"));
-            return new PublicLinkInfoResponse(file.getName(), link.getRole(), false, requiresPassword, List.of(), List.of());
+            return new PublicLinkInfoResponse(
+                    file.getName(), link.getRole(), false, requiresPassword, file.getMimeType(), List.of(), List.of());
         }
 
         Folder folder = folderRepository.findById(link.getFolderId())
                 .orElseThrow(() -> new ResourceNotFoundException("Folder no longer exists"));
 
         if (!unlocked) {
-            return new PublicLinkInfoResponse(folder.getName(), link.getRole(), true, true, List.of(), List.of());
+            return new PublicLinkInfoResponse(folder.getName(), link.getRole(), true, true, null, List.of(), List.of());
         }
 
         List<FileResponse> childFiles = fileRepository
@@ -138,7 +139,8 @@ public class LinkShareService {
         List<FolderResponse> childFolders = folderRepository
                 .findByOwnerIdAndParentIdAndTrashedFalseOrderByNameAsc(folder.getOwnerId(), folder.getId())
                 .stream().map(FolderResponse::from).toList();
-        return new PublicLinkInfoResponse(folder.getName(), link.getRole(), true, requiresPassword, childFiles, childFolders);
+        return new PublicLinkInfoResponse(
+                folder.getName(), link.getRole(), true, requiresPassword, null, childFiles, childFolders);
     }
 
     /** Validates the password (if required) and returns a presigned download URL for a file link. */
@@ -156,6 +158,23 @@ public class LinkShareService {
 
         PresignedDownload presigned = storageService.createPresignedDownloadUrl(file.getStorageKey(), file.getName());
         return new DownloadUrlResponse(presigned.downloadUrl(), presigned.expiresAt());
+    }
+
+    /** Preview (inline) counterpart to getPublicDownloadUrl — same access rules, different Content-Disposition. */
+    public DownloadUrlResponse getPublicPreviewUrl(String token, String suppliedPassword) {
+        LinkShare link = requireUsableLink(token);
+
+        if (link.getFileId() == null) {
+            throw new ResourceNotFoundException("This link does not point to a single downloadable file");
+        }
+
+        checkPassword(link, suppliedPassword);
+
+        File file = fileRepository.findById(link.getFileId())
+                .orElseThrow(() -> new ResourceNotFoundException("File no longer exists"));
+
+        PresignedDownload previewPresigned = storageService.createPresignedPreviewUrl(file.getStorageKey(), file.getName());
+        return new DownloadUrlResponse(previewPresigned.downloadUrl(), previewPresigned.expiresAt());
     }
 
     /**
@@ -186,6 +205,27 @@ public class LinkShareService {
 
         PresignedDownload presigned = storageService.createPresignedDownloadUrl(file.getStorageKey(), file.getName());
         return new DownloadUrlResponse(presigned.downloadUrl(), presigned.expiresAt());
+    }
+
+    /** Preview (inline) counterpart to getPublicFolderFileDownloadUrl. */
+    public DownloadUrlResponse getPublicFolderFilePreviewUrl(String token, UUID fileId, String suppliedPassword) {
+        LinkShare link = requireUsableLink(token);
+
+        if (link.getFolderId() == null) {
+            throw new ResourceNotFoundException("This link does not point to a folder");
+        }
+
+        checkPassword(link, suppliedPassword);
+
+        File file = fileRepository.findById(fileId)
+                .orElseThrow(() -> new ResourceNotFoundException("File not found"));
+
+        if (!link.getFolderId().equals(file.getFolderId())) {
+            throw new ResourceNotFoundException("File not found in this shared folder");
+        }
+
+        PresignedDownload previewPresigned = storageService.createPresignedPreviewUrl(file.getStorageKey(), file.getName());
+        return new DownloadUrlResponse(previewPresigned.downloadUrl(), previewPresigned.expiresAt());
     }
 
     // ---------------------------------------------------------------

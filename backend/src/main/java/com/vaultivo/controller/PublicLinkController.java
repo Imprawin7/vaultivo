@@ -51,4 +51,21 @@ public class PublicLinkController {
         String password = request != null ? request.password() : null;
         return ResponseEntity.ok(linkShareService.getPublicFolderFileDownloadUrl(token, fileId, password));
     }
+
+    @PostMapping("/{token}/preview-url")
+    public ResponseEntity<DownloadUrlResponse> previewUrl(
+            @PathVariable String token,
+            @RequestBody(required = false) PublicLinkAccessRequest request) {
+        String password = request != null ? request.password() : null;
+        return ResponseEntity.ok(linkShareService.getPublicPreviewUrl(token, password));
+    }
+
+    @PostMapping("/{token}/files/{fileId}/preview-url")
+    public ResponseEntity<DownloadUrlResponse> folderFilePreviewUrl(
+            @PathVariable String token,
+            @PathVariable java.util.UUID fileId,
+            @RequestBody(required = false) PublicLinkAccessRequest request) {
+        String password = request != null ? request.password() : null;
+        return ResponseEntity.ok(linkShareService.getPublicFolderFilePreviewUrl(token, fileId, password));
+    }
 }

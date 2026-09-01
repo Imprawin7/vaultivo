@@ -4,6 +4,7 @@ export const initUpload = (payload) => apiClient.post('/files/init-upload', payl
 export const completeUpload = (payload) => apiClient.post('/files/complete-upload', payload).then((r) => r.data);
 export const getFile = (id) => apiClient.get(`/files/${id}`).then((r) => r.data);
 export const getDownloadUrl = (id) => apiClient.get(`/files/${id}/download-url`).then((r) => r.data);
+export const getPreviewUrl = (id) => apiClient.get(`/files/${id}/preview-url`).then((r) => r.data);
 export const updateFile = (id, payload) => apiClient.patch(`/files/${id}`, payload).then((r) => r.data);
 export const trashFile = (id) => apiClient.delete(`/files/${id}`).then((r) => r.data);
 export const restoreFile = (id) => apiClient.post(`/files/${id}/restore`).then((r) => r.data);

@@ -28,5 +28,14 @@ public interface StorageService {
      */
     PresignedDownload createPresignedDownloadUrl(String objectKey, String downloadFilename);
 
+    /**
+     * Same as createPresignedDownloadUrl, but Content-Disposition is set to
+     * "inline" instead of "attachment" — the browser renders the content
+     * directly (images, PDFs) rather than force-downloading it. Callers
+     * decide when this is appropriate (image/PDF mime types); this method
+     * doesn't validate content type itself.
+     */
+    PresignedDownload createPresignedPreviewUrl(String objectKey, String filename);
+
     void deleteObject(String objectKey);
 }

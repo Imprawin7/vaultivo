@@ -66,10 +66,19 @@ public class S3StorageService implements StorageService {
 
     @Override
     public PresignedDownload createPresignedDownloadUrl(String objectKey, String downloadFilename) {
+        return presignGet(objectKey, "attachment; filename=\"" + downloadFilename + "\"");
+    }
+
+    @Override
+    public PresignedDownload createPresignedPreviewUrl(String objectKey, String filename) {
+        return presignGet(objectKey, "inline; filename=\"" + filename + "\"");
+    }
+
+    private PresignedDownload presignGet(String objectKey, String contentDisposition) {
         GetObjectRequest getRequest = GetObjectRequest.builder()
                 .bucket(bucket)
                 .key(objectKey)
-                .responseContentDisposition("attachment; filename=\"" + downloadFilename + "\"")
+                .responseContentDisposition(contentDisposition)
                 .build();
 
         Duration expiry = Duration.ofMinutes(presignExpiryMinutes);
