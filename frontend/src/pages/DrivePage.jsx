@@ -8,6 +8,8 @@ import EmptyState from '../components/EmptyState';
 import Breadcrumbs from '../components/Breadcrumbs';
 import RenameModal from '../components/RenameModal';
 import ShareModal from '../components/ShareModal';
+import VersionHistoryModal from '../components/VersionHistoryModal';
+import PreviewModal from '../components/PreviewModal';
 
 export default function DrivePage() {
   const { folderId } = useParams();
@@ -15,6 +17,8 @@ export default function DrivePage() {
   const queryClient = useQueryClient();
   const [renameTarget, setRenameTarget] = useState(null); // { item, type }
   const [shareTarget, setShareTarget] = useState(null);
+  const [versionTarget, setVersionTarget] = useState(null); // file
+  const [previewTarget, setPreviewTarget] = useState(null); // file
 
   const queryKey = ['folder', folderId ?? 'root'];
   const { data, isLoading, isError } = useQuery({
@@ -85,6 +89,8 @@ export default function DrivePage() {
           onRename={(item, type) => setRenameTarget({ item, type })}
           onToggleStar={handleToggleStar}
           onTrash={handleTrash}
+          onVersionHistory={(file) => setVersionTarget(file)}
+          onPreview={(file) => setPreviewTarget(file)}
         />
       )}
 
@@ -93,6 +99,17 @@ export default function DrivePage() {
       )}
       {shareTarget && (
         <ShareModal item={shareTarget.item} itemType={shareTarget.type} onClose={() => setShareTarget(null)} />
+      )}
+      {versionTarget && (
+        <VersionHistoryModal file={versionTarget} onClose={() => setVersionTarget(null)} onChanged={invalidate} />
+      )}
+      {previewTarget && (
+        <PreviewModal
+          file={previewTarget}
+          fetchPreviewUrl={() => filesApi.getPreviewUrl(previewTarget.id)}
+          onClose={() => setPreviewTarget(null)}
+          onDownload={() => handleDownload(previewTarget)}
+        />
       )}
     </div>
   );

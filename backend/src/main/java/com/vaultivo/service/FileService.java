@@ -9,6 +9,7 @@ import com.vaultivo.model.Folder;
 import com.vaultivo.model.UploadAttempt;
 import com.vaultivo.model.User;
 import com.vaultivo.repository.FileRepository;
+import com.vaultivo.repository.FileVersionRepository;
 import com.vaultivo.repository.UploadAttemptRepository;
 import com.vaultivo.repository.UserRepository;
 import com.vaultivo.security.AccessLevel;
@@ -30,6 +31,7 @@ import java.util.UUID;
 public class FileService {
 
     private final FileRepository fileRepository;
+    private final FileVersionRepository fileVersionRepository;
     private final UserRepository userRepository;
     private final UploadAttemptRepository uploadAttemptRepository;
     private final PermissionService permissionService;
@@ -123,6 +125,14 @@ public class FileService {
         return new DownloadUrlResponse(presigned.downloadUrl(), presigned.expiresAt());
     }
 
+    /** Same access rule as download — Content-Disposition: inline instead of attachment. */
+    public DownloadUrlResponse getPreviewUrl(UUID userId, UUID fileId) {
+        File file = permissionService.requireFileAccess(userId, fileId, AccessLevel.VIEWER);
+        PresignedDownload presigned =
+                storageService.createPresignedPreviewUrl(file.getStorageKey(), file.getName());
+        return new DownloadUrlResponse(presigned.downloadUrl(), presigned.expiresAt());
+    }
+
     @Transactional
     public FileResponse updateFile(UUID userId, UUID fileId, FileUpdateRequest request) {
         File file = permissionService.requireFileAccess(userId, fileId, AccessLevel.EDITOR);
@@ -175,16 +185,33 @@ public class FileService {
         return FileResponse.from(fileRepository.save(file));
     }
 
-    /** Irreversible — restricted to OWNER only, unlike trash which Editors can also do. */
+    /**
+     * Irreversible — restricted to OWNER only, unlike trash which Editors
+     * can also do. Cleans up every archived version's S3 object too, not
+     * just the current one — those objects were never deleted when the file
+     * was replaced (see FileVersionService), so they'd otherwise leak.
+     */
     @Transactional
     public void permanentlyDeleteFile(UUID userId, UUID fileId) {
         File file = permissionService.requireFileAccess(userId, fileId, AccessLevel.OWNER);
         User owner = requireUser(file.getOwnerId());
 
-        storageService.deleteObject(file.getStorageKey());
-        fileRepository.delete(file);
+        List<com.vaultivo.model.FileVersion> versions = fileVersionRepository.findByFileId(fileId);
 
-        long refunded = Math.max(0, owner.getStorageUsedBytes() - file.getSizeBytes());
+        // Dedupe by storage key for BOTH the S3 deletes and the refund sum —
+        // a restored version reuses an older key directly (no re-upload),
+        // so that key would otherwise be double-counted here even though
+        // it's a single S3 object that was only ever charged once.
+        java.util.Map<String, Long> sizeByKey = new java.util.HashMap<>();
+        sizeByKey.put(file.getStorageKey(), file.getSizeBytes());
+        versions.forEach(v -> sizeByKey.put(v.getStorageKey(), v.getSizeBytes()));
+        sizeByKey.keySet().forEach(storageService::deleteObject);
+
+        long totalBytes = sizeByKey.values().stream().mapToLong(Long::longValue).sum();
+
+        fileRepository.delete(file); // cascades file_versions rows at the DB level (ON DELETE CASCADE)
+
+        long refunded = Math.max(0, owner.getStorageUsedBytes() - totalBytes);
         owner.setStorageUsedBytes(refunded);
         userRepository.save(owner);
     }

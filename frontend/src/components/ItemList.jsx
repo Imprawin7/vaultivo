@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { formatBytes, formatDate } from '../lib/format';
+import { isPreviewable } from '../lib/preview';
 import ItemActionsMenu from './ItemActionsMenu';
 
 /**
@@ -19,6 +20,8 @@ export default function ItemList({
   onTrash,
   onRestore,
   onDeleteForever,
+  onVersionHistory,
+  onPreview,
 }) {
   const navigate = useNavigate();
 
@@ -50,6 +53,7 @@ export default function ItemList({
       ];
     }
     const base = [
+      ...(onPreview && isPreviewable(file.mimeType) ? [{ key: 'preview', label: 'Preview', onClick: () => onPreview(file) }] : []),
       { key: 'download', label: 'Download', onClick: () => onDownload(file) },
     ];
     if (mode === 'readonly') return base;
@@ -58,6 +62,7 @@ export default function ItemList({
       { key: 'star', label: file.starred ? 'Remove star' : 'Add star', onClick: () => onToggleStar(file) },
       { key: 'rename', label: 'Rename', onClick: () => onRename(file, 'file') },
       { key: 'share', label: 'Share', onClick: () => onShare(file, 'file') },
+      ...(onVersionHistory ? [{ key: 'versions', label: 'Version history', onClick: () => onVersionHistory(file) }] : []),
       { key: 'd1', divider: true },
       { key: 'trash', label: 'Move to trash', danger: true, onClick: () => onTrash(file, 'file') },
     ];

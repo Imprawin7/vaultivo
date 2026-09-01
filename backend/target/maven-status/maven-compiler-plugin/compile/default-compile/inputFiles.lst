@@ -1,3 +1,5 @@
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\activity\ActivityAction.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\activity\ActivityLogService.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\config\package-info.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\config\RateLimitFilterConfig.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\config\S3Config.java
@@ -12,6 +14,7 @@ D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\PublicLinkContr
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\SearchController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\ShareController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\TrashController.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\ActivityResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\AdminUserResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\AdminUserUpdateRequest.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\AuthResponse.java
@@ -19,6 +22,7 @@ D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\BreadcrumbItem.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\CompleteUploadRequest.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\DownloadUrlResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\ErrorResponse.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\FailedUploadResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\FileResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\FileUpdateRequest.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\FolderCreateRequest.java
@@ -52,20 +56,24 @@ D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\exception\InvalidRequestEx
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\exception\LinkExpiredException.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\exception\ResourceNotFoundException.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\exception\StorageQuotaExceededException.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\Activity.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\File.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\Folder.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\LinkShare.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\package-info.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\Share.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\ShareRole.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\UploadAttempt.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\User.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\ratelimit\RateLimitFilter.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\ratelimit\RateLimitService.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\repository\ActivityRepository.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\repository\FileRepository.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\repository\FolderRepository.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\repository\LinkShareRepository.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\repository\package-info.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\repository\ShareRepository.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\repository\UploadAttemptRepository.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\repository\UserRepository.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\security\AccessLevel.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\security\CustomUserDetailsService.java
