@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { to: '/shared', label: 'Shared with me', icon: SharedIcon },
   { to: '/starred', label: 'Starred', icon: StarIcon },
   { to: '/trash', label: 'Trash', icon: TrashIcon },
+  { to: '/activity', label: 'Activity', icon: ActivityIcon },
 ];
 
 export default function Sidebar({ user, onNewFolder, onUploadClick }) {
@@ -115,6 +116,14 @@ function UploadIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <path d="M12 16V4M7 9l5-5 5 5M4 20h16" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+function ActivityIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M12 7v5l3.5 2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="12" cy="12" r="9" />
     </svg>
   );
 }

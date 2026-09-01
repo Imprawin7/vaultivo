@@ -41,4 +41,10 @@ public class ActivityLogService {
             // Best-effort — never let audit logging break the real request.
         }
     }
+
+    /** A user's own history — distinct from AdminService.recentActivity, which is platform-wide. */
+    public java.util.List<Activity> listForUser(UUID userId, int limit) {
+        return activityRepository.findByActorIdOrderByCreatedAtDesc(
+                userId, org.springframework.data.domain.PageRequest.of(0, limit));
+    }
 }

@@ -7,6 +7,7 @@ D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\config\SecurityConfig.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\AdminController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\AuthController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\FileController.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\FileVersionController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\FolderController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\HealthController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\LinkShareController.java
@@ -20,17 +21,20 @@ D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\AdminUserUpdateRequest
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\AuthResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\BreadcrumbItem.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\CompleteUploadRequest.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\CompleteVersionUploadRequest.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\DownloadUrlResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\ErrorResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\FailedUploadResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\FileResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\FileUpdateRequest.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\FileVersionResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\FolderCreateRequest.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\FolderDetailResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\FolderResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\FolderUpdateRequest.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\InitUploadRequest.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\InitUploadResponse.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\InitVersionUploadRequest.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\LinkShareCreateRequest.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\LinkShareResponse.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\dto\LoginRequest.java
@@ -58,6 +62,7 @@ D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\exception\ResourceNotFound
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\exception\StorageQuotaExceededException.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\Activity.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\File.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\FileVersion.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\Folder.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\LinkShare.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\model\package-info.java
@@ -69,6 +74,7 @@ D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\ratelimit\RateLimitFilter.
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\ratelimit\RateLimitService.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\repository\ActivityRepository.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\repository\FileRepository.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\repository\FileVersionRepository.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\repository\FolderRepository.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\repository\LinkShareRepository.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\repository\package-info.java
@@ -86,6 +92,7 @@ D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\security\UserPrincipal.jav
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\service\AdminService.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\service\AuthService.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\service\FileService.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\service\FileVersionService.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\service\FolderService.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\service\LinkShareService.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\service\package-info.java

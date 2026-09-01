@@ -1,5 +1,7 @@
 package com.vaultivo.service;
 
+import com.vaultivo.activity.ActivityAction;
+import com.vaultivo.activity.ActivityLogService;
 import com.vaultivo.dto.*;
 import com.vaultivo.exception.ResourceNotFoundException;
 import com.vaultivo.model.File;
@@ -41,6 +43,7 @@ public class FileVersionService {
     private final UploadAttemptRepository uploadAttemptRepository;
     private final PermissionService permissionService;
     private final StorageService storageService;
+    private final ActivityLogService activityLogService;
 
     @Transactional
     public InitUploadResponse initVersionUpload(UUID userId, UUID fileId, InitVersionUploadRequest request) {
@@ -95,6 +98,9 @@ public class FileVersionService {
             uploadAttemptRepository.save(attempt);
         });
 
+        activityLogService.log(userId, ActivityAction.UPLOAD_FILE_VERSION, file.getId(), file.getFolderId(),
+                java.util.Map.of("versionNumber", file.getCurrentVersion()));
+
         return FileResponse.from(file);
     }
 
@@ -138,7 +144,10 @@ public class FileVersionService {
         file.setChecksumSha256(target.getChecksumSha256());
         file.setCurrentVersion(file.getCurrentVersion() + 1);
 
-        return FileResponse.from(fileRepository.save(file));
+        FileResponse response = FileResponse.from(fileRepository.save(file));
+        activityLogService.log(userId, ActivityAction.RESTORE_FILE_VERSION, file.getId(), file.getFolderId(),
+                java.util.Map.of("restoredFromVersion", target.getVersionNumber()));
+        return response;
     }
 
     // ---------------------------------------------------------------

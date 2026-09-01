@@ -74,6 +74,10 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = useCallback(() => {
+    // Best-effort — this only records the LOGOUT activity server-side (JWTs
+    // are stateless, nothing to actually invalidate). If it fails (offline,
+    // token already expired), the user still logs out locally regardless.
+    authApi.logout().catch(() => {});
     setToken(null);
     setUser(null);
   }, []);

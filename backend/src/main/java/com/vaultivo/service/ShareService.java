@@ -1,5 +1,7 @@
 package com.vaultivo.service;
 
+import com.vaultivo.activity.ActivityAction;
+import com.vaultivo.activity.ActivityLogService;
 import com.vaultivo.dto.FileResponse;
 import com.vaultivo.dto.FolderResponse;
 import com.vaultivo.dto.ShareCreateRequest;
@@ -36,6 +38,7 @@ public class ShareService {
     private final FileRepository fileRepository;
     private final FolderRepository folderRepository;
     private final PermissionService permissionService;
+    private final ActivityLogService activityLogService;
 
     @Transactional
     public ShareResponse shareFile(UUID ownerId, UUID fileId, ShareCreateRequest request) {
@@ -58,7 +61,10 @@ public class ShareService {
                         .role(request.role())
                         .build());
 
-        return ShareResponse.from(shareRepository.save(share), target.getEmail());
+        ShareResponse response = ShareResponse.from(shareRepository.save(share), target.getEmail());
+        activityLogService.log(ownerId, ActivityAction.SHARE_FILE, fileId, null,
+                java.util.Map.of("sharedWithEmail", target.getEmail(), "role", request.role().name()));
+        return response;
     }
 
     @Transactional
@@ -82,7 +88,10 @@ public class ShareService {
                         .role(request.role())
                         .build());
 
-        return ShareResponse.from(shareRepository.save(share), target.getEmail());
+        ShareResponse response = ShareResponse.from(shareRepository.save(share), target.getEmail());
+        activityLogService.log(ownerId, ActivityAction.SHARE_FOLDER, null, folderId,
+                java.util.Map.of("sharedWithEmail", target.getEmail(), "role", request.role().name()));
+        return response;
     }
 
     public List<ShareResponse> listFileShares(UUID ownerId, UUID fileId) {
@@ -105,6 +114,7 @@ public class ShareService {
         Share share = shareRepository.findByIdAndFileId(shareId, fileId)
                 .orElseThrow(() -> new ResourceNotFoundException("Share not found: " + shareId));
         shareRepository.delete(share);
+        activityLogService.log(ownerId, ActivityAction.REVOKE_SHARE, fileId, null, null);
     }
 
     @Transactional
@@ -113,6 +123,7 @@ public class ShareService {
         Share share = shareRepository.findByIdAndFolderId(shareId, folderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Share not found: " + shareId));
         shareRepository.delete(share);
+        activityLogService.log(ownerId, ActivityAction.REVOKE_SHARE, null, folderId, null);
     }
 
     /** Direct shares only — a file/folder nested inside a shared folder doesn't get its own row here (it's covered by folder-share inheritance in PermissionService, not a separate listing entry). */

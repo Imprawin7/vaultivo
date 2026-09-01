@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -68,6 +70,10 @@ public class AuthService {
         activityLogService.log(user.getId(), ActivityAction.LOGIN, java.util.Map.of("method", "password"));
 
         return issueTokenFor(user);
+    }
+
+    public void logout(UUID userId) {
+        activityLogService.log(userId, ActivityAction.LOGOUT);
     }
 
     private AuthResponse issueTokenFor(User user) {

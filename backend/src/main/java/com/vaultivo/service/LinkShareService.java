@@ -1,5 +1,7 @@
 package com.vaultivo.service;
 
+import com.vaultivo.activity.ActivityAction;
+import com.vaultivo.activity.ActivityLogService;
 import com.vaultivo.dto.*;
 import com.vaultivo.exception.InvalidLinkPasswordException;
 import com.vaultivo.exception.LinkExpiredException;
@@ -37,6 +39,7 @@ public class LinkShareService {
     private final PermissionService permissionService;
     private final PasswordEncoder passwordEncoder;
     private final StorageService storageService;
+    private final ActivityLogService activityLogService;
 
     @Transactional
     public LinkShareResponse createForFile(UUID ownerId, UUID fileId, LinkShareCreateRequest request) {
@@ -51,7 +54,9 @@ public class LinkShareService {
                 .token(generateToken())
                 .build();
 
-        return LinkShareResponse.from(linkShareRepository.save(link));
+        LinkShareResponse response = LinkShareResponse.from(linkShareRepository.save(link));
+        activityLogService.log(ownerId, ActivityAction.CREATE_PUBLIC_LINK, fileId, null, null);
+        return response;
     }
 
     @Transactional
@@ -67,7 +72,9 @@ public class LinkShareService {
                 .token(generateToken())
                 .build();
 
-        return LinkShareResponse.from(linkShareRepository.save(link));
+        LinkShareResponse response = LinkShareResponse.from(linkShareRepository.save(link));
+        activityLogService.log(ownerId, ActivityAction.CREATE_PUBLIC_LINK, null, folderId, null);
+        return response;
     }
 
     public List<LinkShareResponse> listForFile(UUID ownerId, UUID fileId) {

@@ -1,5 +1,7 @@
 package com.vaultivo.service;
 
+import com.vaultivo.activity.ActivityAction;
+import com.vaultivo.activity.ActivityLogService;
 import com.vaultivo.dto.*;
 import com.vaultivo.exception.DuplicateNameException;
 import com.vaultivo.exception.ResourceNotFoundException;
@@ -36,6 +38,7 @@ public class FileService {
     private final UploadAttemptRepository uploadAttemptRepository;
     private final PermissionService permissionService;
     private final StorageService storageService;
+    private final ActivityLogService activityLogService;
 
     @Transactional
     public InitUploadResponse initUpload(UUID userId, InitUploadRequest request) {
@@ -110,6 +113,9 @@ public class FileService {
             uploadAttemptRepository.save(attempt);
         });
 
+        activityLogService.log(userId, ActivityAction.UPLOAD_FILE, file.getId(), file.getFolderId(),
+                java.util.Map.of("name", file.getName(), "sizeBytes", request.sizeBytes()));
+
         return FileResponse.from(file);
     }
 
@@ -122,6 +128,7 @@ public class FileService {
         File file = permissionService.requireFileAccess(userId, fileId, AccessLevel.VIEWER);
         PresignedDownload presigned =
                 storageService.createPresignedDownloadUrl(file.getStorageKey(), file.getName());
+        activityLogService.log(userId, ActivityAction.DOWNLOAD_FILE, file.getId(), file.getFolderId(), null);
         return new DownloadUrlResponse(presigned.downloadUrl(), presigned.expiresAt());
     }
 
@@ -162,7 +169,20 @@ public class FileService {
             // flag on the file itself (see files.is_starred in schema.sql), so
             // it is effectively shared across anyone with access. Acceptable
             // for MVP; a proper per-user star needs the `stars` join table.
+            boolean starChanged = request.starred() != file.isStarred();
             file.setStarred(request.starred());
+            if (starChanged) {
+                activityLogService.log(userId, request.starred() ? ActivityAction.STAR_FILE : ActivityAction.UNSTAR_FILE,
+                        file.getId(), file.getFolderId(), null);
+            }
+        }
+
+        if (nameChanged) {
+            activityLogService.log(userId, ActivityAction.RENAME_FILE, file.getId(), file.getFolderId(),
+                    java.util.Map.of("newName", targetName));
+        }
+        if (locationChanged) {
+            activityLogService.log(userId, ActivityAction.MOVE_FILE, file.getId(), targetFolderId, null);
         }
 
         return FileResponse.from(fileRepository.save(file));
@@ -174,6 +194,7 @@ public class FileService {
         file.setTrashed(true);
         file.setTrashedAt(Instant.now());
         fileRepository.save(file);
+        activityLogService.log(userId, ActivityAction.TRASH_FILE, file.getId(), file.getFolderId(), null);
     }
 
     @Transactional
@@ -182,7 +203,9 @@ public class FileService {
         assertNameAvailable(file.getOwnerId(), file.getFolderId(), file.getName());
         file.setTrashed(false);
         file.setTrashedAt(null);
-        return FileResponse.from(fileRepository.save(file));
+        FileResponse response = FileResponse.from(fileRepository.save(file));
+        activityLogService.log(userId, ActivityAction.RESTORE_FILE, file.getId(), file.getFolderId(), null);
+        return response;
     }
 
     /**
@@ -214,6 +237,9 @@ public class FileService {
         long refunded = Math.max(0, owner.getStorageUsedBytes() - totalBytes);
         owner.setStorageUsedBytes(refunded);
         userRepository.save(owner);
+
+        activityLogService.log(userId, ActivityAction.DELETE_FILE_PERMANENT, null, null,
+                java.util.Map.of("name", file.getName()));
     }
 
     public List<FileResponse> search(UUID ownerId, String query) {

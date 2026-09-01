@@ -11,6 +11,7 @@ import StarredPage from './pages/StarredPage';
 import TrashPage from './pages/TrashPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import AdminPage from './pages/AdminPage';
+import ActivityPage from './pages/ActivityPage';
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="/trash" element={<TrashPage />} />
             <Route path="/search" element={<SearchResultsPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/activity" element={<ActivityPage />} />
           </Route>
 
           <Route path="/" element={<Navigate to="/drive" replace />} />

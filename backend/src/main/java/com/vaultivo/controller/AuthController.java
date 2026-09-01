@@ -34,4 +34,16 @@ public class AuthController {
     public ResponseEntity<UserResponse> me(@AuthenticationPrincipal UserPrincipal principal) {
         return ResponseEntity.ok(UserResponse.from(principal.getUser()));
     }
+
+    /**
+     * Purely for the activity log — JWTs are stateless here, so this does
+     * NOT invalidate the token (it stays valid until natural expiry). The
+     * frontend still clears its stored token on logout regardless of this
+     * call succeeding; this just records that the user chose to log out.
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@AuthenticationPrincipal UserPrincipal principal) {
+        authService.logout(principal.getId());
+        return ResponseEntity.noContent().build();
+    }
 }
