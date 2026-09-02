@@ -10,6 +10,7 @@ import RenameModal from '../components/RenameModal';
 import ShareModal from '../components/ShareModal';
 import VersionHistoryModal from '../components/VersionHistoryModal';
 import PreviewModal from '../components/PreviewModal';
+import TagManageModal from '../components/TagManageModal';
 
 export default function DrivePage() {
   const { folderId } = useParams();
@@ -19,6 +20,7 @@ export default function DrivePage() {
   const [shareTarget, setShareTarget] = useState(null);
   const [versionTarget, setVersionTarget] = useState(null); // file
   const [previewTarget, setPreviewTarget] = useState(null); // file
+  const [tagTarget, setTagTarget] = useState(null); // { item, type }
 
   const queryKey = ['folder', folderId ?? 'root'];
   const { data, isLoading, isError } = useQuery({
@@ -91,6 +93,7 @@ export default function DrivePage() {
           onTrash={handleTrash}
           onVersionHistory={(file) => setVersionTarget(file)}
           onPreview={(file) => setPreviewTarget(file)}
+          onManageTags={(item, type) => setTagTarget({ item, type })}
         />
       )}
 
@@ -110,6 +113,9 @@ export default function DrivePage() {
           onClose={() => setPreviewTarget(null)}
           onDownload={() => handleDownload(previewTarget)}
         />
+      )}
+      {tagTarget && (
+        <TagManageModal item={tagTarget.item} itemType={tagTarget.type} onClose={() => setTagTarget(null)} />
       )}
     </div>
   );

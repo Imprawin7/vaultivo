@@ -22,6 +22,7 @@ export default function ItemList({
   onDeleteForever,
   onVersionHistory,
   onPreview,
+  onManageTags,
 }) {
   const navigate = useNavigate();
 
@@ -40,6 +41,7 @@ export default function ItemList({
     return [
       { key: 'rename', label: 'Rename', onClick: () => onRename(folder, 'folder') },
       { key: 'share', label: 'Share', onClick: () => onShare(folder, 'folder') },
+      ...(onManageTags ? [{ key: 'tags', label: 'Manage tags', onClick: () => onManageTags(folder, 'folder') }] : []),
       { key: 'd1', divider: true },
       { key: 'trash', label: 'Move to trash', danger: true, onClick: () => onTrash(folder, 'folder') },
     ];
@@ -63,6 +65,7 @@ export default function ItemList({
       { key: 'rename', label: 'Rename', onClick: () => onRename(file, 'file') },
       { key: 'share', label: 'Share', onClick: () => onShare(file, 'file') },
       ...(onVersionHistory ? [{ key: 'versions', label: 'Version history', onClick: () => onVersionHistory(file) }] : []),
+      ...(onManageTags ? [{ key: 'tags', label: 'Manage tags', onClick: () => onManageTags(file, 'file') }] : []),
       { key: 'd1', divider: true },
       { key: 'trash', label: 'Move to trash', danger: true, onClick: () => onTrash(file, 'file') },
     ];

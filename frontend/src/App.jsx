@@ -1,52 +1,66 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+
 import { AuthProvider } from './context/AuthContext';
+
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import OAuthCallbackPage from './pages/OAuthCallbackPage';
 import PublicLinkPage from './pages/PublicLinkPage';
+
 import DriveLayout from './components/DriveLayout';
+import AdminLayout from './components/AdminLayout';
+
 import DrivePage from './pages/DrivePage';
 import SharedPage from './pages/SharedPage';
 import StarredPage from './pages/StarredPage';
 import TrashPage from './pages/TrashPage';
 import SearchResultsPage from './pages/SearchResultsPage';
-import AdminPage from './pages/AdminPage';
-import AdminLayout from './components/AdminLayout';
 import ActivityPage from './pages/ActivityPage';
+import TagsPage from './pages/TagsPage';
+
+import AdminPage from './pages/AdminPage';
 
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+
           {/* Public / unauthenticated */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/oauth2/callback" element={<OAuthCallbackPage />} />
           <Route path="/shared-link/:token" element={<PublicLinkPage />} />
 
-          {/* Authenticated user application — DriveLayout guards these with a redirect to /login */}
+          {/* Authenticated user application */}
           <Route element={<DriveLayout />}>
             <Route path="/drive" element={<DrivePage />} />
             <Route path="/drive/:folderId" element={<DrivePage />} />
+
             <Route path="/shared" element={<SharedPage />} />
             <Route path="/starred" element={<StarredPage />} />
+            <Route path="/tags" element={<TagsPage />} />
             <Route path="/trash" element={<TrashPage />} />
             <Route path="/search" element={<SearchResultsPage />} />
             <Route path="/activity" element={<ActivityPage />} />
           </Route>
 
-          {/* Separate admin application shell — AdminLayout requires an admin account */}
+          {/* Separate Admin application */}
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<AdminPage />} />
-            <Route path="/admin/users" element={<AdminPage />} />
-            <Route path="/admin/storage" element={<AdminPage />} />
-            <Route path="/admin/activity" element={<AdminPage />} />
-            <Route path="/admin/security" element={<AdminPage />} />
           </Route>
 
-          <Route path="/" element={<Navigate to="/drive" replace />} />
-          <Route path="*" element={<Navigate to="/drive" replace />} />
+          {/* Default routes */}
+          <Route
+            path="/"
+            element={<Navigate to="/drive" replace />}
+          />
+
+          <Route
+            path="*"
+            element={<Navigate to="/drive" replace />}
+          />
+
         </Routes>
       </BrowserRouter>
     </AuthProvider>
