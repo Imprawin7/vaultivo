@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ThemeToggle from './ThemeToggle';
 
 export default function TopBar({ view, onViewChange, showViewToggle = true }) {
   const [query, setQuery] = useState('');
@@ -41,6 +42,8 @@ export default function TopBar({ view, onViewChange, showViewToggle = true }) {
       </form>
 
       <div className="flex-1" />
+
+      <ThemeToggle />
 
       {showViewToggle && (
         <div className="flex items-center border border-line rounded-ticket overflow-hidden">

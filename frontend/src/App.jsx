@@ -39,6 +39,10 @@ export default function App() {
           {/* Separate admin application shell — AdminLayout requires an admin account */}
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin/users" element={<AdminPage />} />
+            <Route path="/admin/storage" element={<AdminPage />} />
+            <Route path="/admin/activity" element={<AdminPage />} />
+            <Route path="/admin/security" element={<AdminPage />} />
           </Route>
 
           <Route path="/" element={<Navigate to="/drive" replace />} />

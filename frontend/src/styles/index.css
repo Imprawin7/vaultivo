@@ -2,12 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: light;
+  --color-ink: 20 35 31;
+  --color-paper: 246 244 238;
+  --color-surface: 255 255 255;
+  --color-vault: 31 75 67;
+  --color-vault-dark: 20 51 45;
+  --color-vault-light: 46 107 96;
+  --color-brass: 183 137 63;
+  --color-brass-light: 214 179 120;
+  --color-line: 227 222 207;
+  --color-danger: 162 59 46;
+}
+
+html.dark {
+  color-scheme: dark;
+  --color-ink: 232 237 233;
+  --color-paper: 17 26 23;
+  --color-surface: 25 36 32;
+  --color-vault: 66 126 113;
+  --color-vault-dark: 48 101 90;
+  --color-vault-light: 84 146 132;
+  --color-brass: 211 168 91;
+  --color-brass-light: 226 194 130;
+  --color-line: 52 67 61;
+  --color-danger: 221 104 89;
+}
+
 @layer base {
   html {
     @apply antialiased;
+    transition: background-color 160ms ease, color 160ms ease;
   }
   body {
     @apply bg-paper text-ink font-sans;
+    transition: background-color 160ms ease, color 160ms ease;
   }
   ::selection {
     @apply bg-brass/30;
@@ -32,9 +62,9 @@
     left: 14px;
     width: 18px;
     height: 6px;
-    background: theme('colors.paper');
-    border-left: 1px solid theme('colors.line');
-    border-right: 1px solid theme('colors.line');
+    background: rgb(var(--color-paper));
+    border-left: 1px solid rgb(var(--color-line));
+    border-right: 1px solid rgb(var(--color-line));
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
   }
@@ -62,5 +92,11 @@
   .btn-danger {
     @apply inline-flex items-center gap-2 px-4 py-2 bg-transparent text-danger text-sm font-medium rounded-ticket
            border border-danger/30 hover:bg-danger/5 transition-colors duration-150;
+  }
+}
+
+@layer components {
+  .admin-surface-transition {
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
   }
 }

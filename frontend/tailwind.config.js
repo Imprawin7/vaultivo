@@ -4,20 +4,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: '#14231F',        // near-black deep vault green — primary text, dark chrome
-        paper: '#F6F4EE',      // warm ledger-paper background
-        surface: '#FFFFFF',    // cards/panels on top of paper
+        ink: 'rgb(var(--color-ink) / <alpha-value>)',
+        paper: 'rgb(var(--color-paper) / <alpha-value>)',
+        surface: 'rgb(var(--color-surface) / <alpha-value>)',
         vault: {
-          DEFAULT: '#1F4B43',  // deep vault-door green — primary action color
-          dark: '#14332D',
-          light: '#2E6B60',
+          DEFAULT: 'rgb(var(--color-vault) / <alpha-value>)',
+          dark: 'rgb(var(--color-vault-dark) / <alpha-value>)',
+          light: 'rgb(var(--color-vault-light) / <alpha-value>)',
         },
         brass: {
-          DEFAULT: '#B7893F',  // brass accent — used sparingly (active states, star, badges)
-          light: '#D6B378',
+          DEFAULT: 'rgb(var(--color-brass) / <alpha-value>)',
+          light: 'rgb(var(--color-brass-light) / <alpha-value>)',
         },
-        line: '#E3DECF',       // hairline dividers, ledger-rule color
-        danger: '#A23B2E',     // muted brick red for destructive actions
+        line: 'rgb(var(--color-line) / <alpha-value>)',
+        danger: 'rgb(var(--color-danger) / <alpha-value>)'
       },
       fontFamily: {
         display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
