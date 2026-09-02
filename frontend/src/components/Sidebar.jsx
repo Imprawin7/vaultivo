@@ -50,18 +50,6 @@ export default function Sidebar({ user, onNewFolder, onUploadClick }) {
           </NavLink>
         ))}
 
-        {user?.isAdmin && (
-          <NavLink
-            to="/admin"
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2 rounded-ticket text-sm transition-colors duration-150 ${
-                isActive ? 'bg-paper/10 text-paper font-medium' : 'text-paper/70 hover:bg-paper/5 hover:text-paper'
-              }`
-            }
-          >
-            <AdminIcon /> Admin
-          </NavLink>
-        )}
       </nav>
 
       <div className="px-5 py-5 border-t border-paper/10">
@@ -124,14 +112,6 @@ function ActivityIcon() {
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
       <path d="M12 7v5l3.5 2" strokeLinecap="round" strokeLinejoin="round" />
       <circle cx="12" cy="12" r="9" />
-    </svg>
-  );
-}
-function AdminIcon() {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" strokeLinejoin="round" />
-      <path d="M9.5 12l2 2 3.5-3.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

@@ -4,6 +4,7 @@ D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\config\package-info.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\config\RateLimitFilterConfig.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\config\S3Config.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\config\SecurityConfig.java
+D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\ActivityController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\AdminController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\AuthController.java
 D:\Coding\vaultivo\backend\src\main\java\com\vaultivo\controller\FileController.java

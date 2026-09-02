@@ -11,6 +11,7 @@ import StarredPage from './pages/StarredPage';
 import TrashPage from './pages/TrashPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import AdminPage from './pages/AdminPage';
+import AdminLayout from './components/AdminLayout';
 import ActivityPage from './pages/ActivityPage';
 
 export default function App() {
@@ -24,7 +25,7 @@ export default function App() {
           <Route path="/oauth2/callback" element={<OAuthCallbackPage />} />
           <Route path="/shared-link/:token" element={<PublicLinkPage />} />
 
-          {/* Authenticated app shell — DriveLayout guards these with a redirect to /login */}
+          {/* Authenticated user application — DriveLayout guards these with a redirect to /login */}
           <Route element={<DriveLayout />}>
             <Route path="/drive" element={<DrivePage />} />
             <Route path="/drive/:folderId" element={<DrivePage />} />
@@ -32,8 +33,12 @@ export default function App() {
             <Route path="/starred" element={<StarredPage />} />
             <Route path="/trash" element={<TrashPage />} />
             <Route path="/search" element={<SearchResultsPage />} />
-            <Route path="/admin" element={<AdminPage />} />
             <Route path="/activity" element={<ActivityPage />} />
+          </Route>
+
+          {/* Separate admin application shell — AdminLayout requires an admin account */}
+          <Route element={<AdminLayout />}>
+            <Route path="/admin" element={<AdminPage />} />
           </Route>
 
           <Route path="/" element={<Navigate to="/drive" replace />} />
