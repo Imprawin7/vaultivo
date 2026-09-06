@@ -1,10 +1,12 @@
+
 import axios from 'axios';
 
-// Central Axios instance. The JWT is attached per-request from AuthContext
-// (see AuthContext.jsx) rather than baked in here, so logging out/in
-// doesn't require recreating this instance.
+// Central Axios instance.
+// The JWT is attached per-request from AuthContext.jsx.
+
 const apiClient = axios.create({
-  baseURL: '/api',
+  baseURL: 'https://vaultivo-1.onrender.com/api',
 });
 
 export default apiClient;
+
